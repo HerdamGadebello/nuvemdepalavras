@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordCloud Edu - Ferramenta Colaborativa</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela Inicial -->
+        <div id="telaInicial" class="tela">
+            <h1>📚 WordCloud Edu</h1>
+            <div class="card">
+                <h2>Professor</h2>
+                <button onclick="mostrarCriarSala()">Criar Nova Sala</button>
+                <div id="criarSala" style="display: none;">
+                    <input type="text" id="nomeSala" placeholder="Nome da atividade">
+                    <button onclick="criarSala()">Criar</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Aluno</h2>
+                <input type="text" id="codigoAcesso" placeholder="Digite o código da sala">
+                <input type="text" id="nomeAluno" placeholder="Seu nome">
+                <button onclick="entrarSala()">Entrar na Sala</button>
+            </div>
+        </div>
+
+        <!-- Tela Professor -->
+        <div id="telaProfessor" class="tela" style="display: none;">
+            <h2>Sala: <span id="nomeSalaProfessor"></span></h2>
+            <p>Código: <strong id="codigoSalaProfessor"></strong></p>
+            <p>Compartilhe este código com seus alunos</p>
+            
+            <div class="controls">
+                <button onclick="iniciarAtividade()">▶️ Iniciar</button>
+                <button onclick="pausarAtividade()">⏸️ Pausar</button>
+                <button onclick="reiniciarAtividade()">🔄 Reiniciar</button>
+            </div>
+
+            <div id="wordcloud" class="wordcloud-container"></div>
+            <div id="estatisticas"></div>
+        </div>
+
+        <!-- Tela Aluno -->
+        <div id="telaAluno" class="tela" style="display: none;">
+            <h2>Sala: <span id="nomeSalaAluno"></span></h2>
+            <div id="aguardando" class="mensagem">
+                <p>⏳ Aguardando professor iniciar a atividade...</p>
+            </div>
+            
+            <div id="areaParticipacao" style="display: none;">
+                <h3>Sua participação:</h3>
+                <input type="text" id="palavraInput" placeholder="Digite sua palavra">
+                <button onclick="enviarPalavra()">Enviar</button>
+                <p id="statusEnvio"></p>
+            </div>
+
+            <div id="visualizacao" class="wordcloud-container" style="display: none;">
+                <!-- Word cloud será renderizada aqui -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
