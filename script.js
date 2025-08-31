@@ -1,12 +1,12 @@
-// Configuração do Firebase (você precisa criar uma conta gratuita)
+// Configuração do Firebase - SUAS CREDENCIAIS
 const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "seu-projeto.firebaseapp.com",
-    databaseURL: "https://seu-projeto.firebaseio.com",
-    projectId: "seu-projeto",
-    storageBucket: "seu-projeto.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "seu-app-id"
+    apiKey: "AIzaSyBTe5Sxo_vXHXx_IpdExwtTPEcyXHowOXw",
+    authDomain: "nuvemdamiao-efdb8.firebaseapp.com",
+    databaseURL: "https://nuvemdamiao-efdb8-default-rtdb.firebaseio.com",
+    projectId: "nuvemdamiao-efdb8",
+    storageBucket: "nuvemdamiao-efdb8.firebasestorage.app",
+    messagingSenderId: "607211096362",
+    appId: "1:607211096362:web:813abafa5ea5a1f874b653"
 };
 
 // Inicializar Firebase
@@ -83,6 +83,10 @@ function entrarSala() {
             } else {
                 alert('Sala não encontrada!');
             }
+        })
+        .catch(error => {
+            console.error('Erro ao acessar sala:', error);
+            alert('Erro ao conectar com o servidor');
         });
 }
 
@@ -148,6 +152,10 @@ function enviarPalavra() {
             setTimeout(() => {
                 document.getElementById('statusEnvio').textContent = '';
             }, 2000);
+        })
+        .catch(error => {
+            console.error('Erro ao enviar palavra:', error);
+            alert('Erro ao enviar palavra');
         });
 }
 
@@ -173,7 +181,11 @@ function atualizarInterfaceAluno(sala) {
 function atualizarWordCloud(palavras) {
     const lista = Object.entries(palavras || {}).map(([text, size]) => [text, size * 10]);
     
-    WordCloud(document.getElementById('wordcloud'), {
+    const canvas = document.getElementById('wordcloud');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    
+    WordCloud(canvas, {
         list: lista,
         gridSize: 10,
         weightFactor: 2,
@@ -188,7 +200,11 @@ function atualizarWordCloud(palavras) {
 function atualizarWordCloudVisualizacao(palavras) {
     const lista = Object.entries(palavras || {}).map(([text, size]) => [text, size * 10]);
     
-    WordCloud(document.getElementById('visualizacao'), {
+    const canvas = document.getElementById('visualizacao');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    
+    WordCloud(canvas, {
         list: lista,
         gridSize: 10,
         weightFactor: 2,
@@ -215,5 +231,32 @@ function atualizarEstatisticas(palavras) {
     `;
 }
 
+// Teste de conexão com Firebase
+function testarConexao() {
+    const testRef = database.ref('teste');
+    testRef.set({
+        mensagem: 'Conexão estabelecida em: ' + new Date().toLocaleString(),
+        status: 'sucesso'
+    }).then(() => {
+        console.log('✅ Firebase conectado com sucesso!');
+        testRef.remove(); // Limpar teste
+    }).catch(error => {
+        console.error('❌ Erro no Firebase:', error);
+        alert('Erro de conexão com o Firebase. Verifique o console.');
+    });
+}
+
 // Inicialização
 mostrarTela('telaInicial');
+
+// Executar teste quando a página carregar
+window.addEventListener('load', testarConexao);
+
+// Recarregar word cloud quando redimensionar a janela
+window.addEventListener('resize', () => {
+    if (salaAtual && userType === 'professor') {
+        atualizarWordCloud(salaAtual.palavras);
+    } else if (salaAtual && userType === 'aluno') {
+        atualizarWordCloudVisualizacao(salaAtual.palavras);
+    }
+});
